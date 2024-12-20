@@ -12,13 +12,19 @@ import SwiftUI
 
 @main
 struct CryptoAppApp: App {
+    @StateObject private var vm = HomeViewModel()
     var body: some Scene {
         WindowGroup {
             //сразу для приложения определяем "NavigationView"
-            NavigationView {
-                HomeView()
+            GeometryReader { geometry in
+                NavigationView {
+                    HomeView()
+                        .toolbar(.hidden) //скрываем панель toolBar
+                    
+                }
+                .environmentObject(vm)
+                .environment(\.mainWindowSize, geometry.size)
             }
-            .toolbar(.hidden) //скрываем панель toolBar
         }
     }
 }
