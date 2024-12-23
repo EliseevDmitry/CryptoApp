@@ -9,19 +9,23 @@ import Foundation
 import Combine
 
 class HomeViewModel: ObservableObject {
-    
+    /*
+     заменяем моковые данные после добавления сервиcа - marketDataService = MarketDataService()
     @Published var statistics: [StatisticModel] = [
         StatisticModel(title: "Title", value: "Value", percentageChange: 1),
         StatisticModel(title: "Title", value: "Value"),
         StatisticModel(title: "Title", value: "Value", percentageChange: -7),
         StatisticModel(title: "Title", value: "Value", percentageChange: -74.9)
     ]
+     */
+    @Published var statistics: [StatisticModel] = []
     
     @Published var allCoins: [CoinModel] = []
     @Published var portfolioCoins: [CoinModel] = []
     @Published var searchText: String = ""
     
-    private let dataService = CoinDataService()
+    private let coinDataService = CoinDataService()
+    private let marketDataService = MarketDataService()
     private var cancellable = Set<AnyCancellable>()
     
     init(){
@@ -48,13 +52,40 @@ class HomeViewModel: ObservableObject {
          */
         
         $searchText
-            .combineLatest(dataService.$allCoins) //добавляет еще одного паблюшера
+            .combineLatest(coinDataService.$allCoins) //добавляет еще одного паблюшера
         //задержка для того чтобы при вводе символов с клавиатуры - каждый раз не срабатывала функция фильтрации а только после паузы после 0.5 секунд
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .map(filterCoins) //можно сократить до имени функции - в силу того, что параметры мы продублировали из автозаполнения .map - а потом вынесли в отдельную функцию
             .sink { [weak self] (returnedCoin) in
                 if let self = self {
                     self.allCoins = returnedCoin
+                }
+            }
+            .store(in: &cancellable)
+        
+        
+        marketDataService.$marketData
+            .map { (marketDataModel) -> [StatisticModel] in
+                var stats: [StatisticModel] = []
+                guard let data = marketDataModel else {
+                    return stats
+                }
+                let marketCap = StatisticModel(title: "Market Cap", value: data.marketCap, percentageChange: data.marketCapChangePercentage24HUsd)
+                let volume = StatisticModel(title: "24h Volume", value: data.volume)
+                let btcDominance = StatisticModel(title: "Btc Dominance", value: data.btcDominance)
+                let portfolio = StatisticModel(title: "Portfolio Value", value: "$0.00", percentageChange: 0)
+                stats.append(contentsOf:
+                                [ marketCap,
+                                  volume,
+                                  btcDominance,
+                                  portfolio
+                                ]
+                )
+                return stats
+            }
+            .sink { [weak self] (returnedStats) in
+                if let self = self {
+                    self.statistics = returnedStats
                 }
             }
             .store(in: &cancellable)
