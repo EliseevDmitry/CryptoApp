@@ -19,6 +19,7 @@ struct HomeView: View {
             //content layer
             VStack{
                 homeHeader //очень хорошая практика - выносить в отдельные extension (блоки кода)
+                HomeStatusViews(showPortfolio: $showPortfolio)
                 SearchBarView(searchText: $vm.searchText)
                 columnTitles
                 if !showPortfolio {
