@@ -65,6 +65,8 @@ class HomeViewModel: ObservableObject {
         
         
         marketDataService.$marketData
+        /*
+         оптимизируем код - вынесем логику в private func
             .map { (marketDataModel) -> [StatisticModel] in
                 var stats: [StatisticModel] = []
                 guard let data = marketDataModel else {
@@ -83,6 +85,8 @@ class HomeViewModel: ObservableObject {
                 )
                 return stats
             }
+         */
+            .map(addMarketData) //если параметры указаны правильно - можно оставить только имя фцнкции
             .sink { [weak self] (returnedStats) in
                 if let self = self {
                     self.statistics = returnedStats
@@ -102,4 +106,24 @@ class HomeViewModel: ObservableObject {
             coin.id.lowercased().contains(lowercastedText)
         }
     }
+    
+    private func addMarketData(marketDataModel: MarketDataModel?) -> [StatisticModel] {
+        var stats: [StatisticModel] = []
+        guard let data = marketDataModel else {
+            return stats
+        }
+        let marketCap = StatisticModel(title: "Market Cap", value: data.marketCap, percentageChange: data.marketCapChangePercentage24HUsd)
+        let volume = StatisticModel(title: "24h Volume", value: data.volume)
+        let btcDominance = StatisticModel(title: "Btc Dominance", value: data.btcDominance)
+        let portfolio = StatisticModel(title: "Portfolio Value", value: "$0.00", percentageChange: 0)
+        stats.append(contentsOf:
+                        [ marketCap,
+                          volume,
+                          btcDominance,
+                          portfolio
+                        ]
+        )
+        return stats
+    }
+    
 }

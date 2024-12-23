@@ -11,11 +11,18 @@ struct HomeView: View {
     @EnvironmentObject private var vm: HomeViewModel
     @Environment(\.mainWindowSize) var viewSize
     @State private var showPortfolio: Bool = false
+    @State private var showPortfolioView: Bool = false
     var body: some View {
         ZStack{
             //background layer
             Color.theme.background
                 .ignoresSafeArea()
+            //добавляет новый лист к фону
+                .sheet(isPresented: $showPortfolioView, content: {
+                    PortfolioView()
+                      //  .environmentObject(vm) //проверим нужно ли тут пробрасывать!?
+                })
+
             //content layer
             VStack{
                 homeHeader //очень хорошая практика - выносить в отдельные extension (блоки кода)
@@ -45,6 +52,11 @@ extension HomeView {
                 .background(
                     CircleButtonAnimationView(animate: $showPortfolio)
                 )
+                .onTapGesture {
+                    if showPortfolio {
+                        showPortfolioView.toggle()
+                    }
+                }
             Spacer()
             Text(showPortfolio ? "Portfolio" : "Live Prices")
                 .font(.headline)

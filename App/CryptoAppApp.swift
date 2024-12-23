@@ -13,6 +13,13 @@ import SwiftUI
 @main
 struct CryptoAppApp: App {
     @StateObject private var vm = HomeViewModel()
+    
+    //инициализация цвета заголовка для всего приложения UINavigationBar
+    init(){
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor : UIColor(Color.theme.accent)]
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor : UIColor(Color.theme.accent)]
+    }
+    
     var body: some Scene {
         WindowGroup {
             //сразу для приложения определяем "NavigationView"
