@@ -26,6 +26,7 @@ class HomeViewModel: ObservableObject {
     
     private let coinDataService = CoinDataService()
     private let marketDataService = MarketDataService()
+    private let portfolioDataService = PortfolioDataService()
     private var cancellable = Set<AnyCancellable>()
     
     init(){
@@ -51,6 +52,8 @@ class HomeViewModel: ObservableObject {
          .store(in: &cancellable)
          */
         
+        //update allCoins
+        
         $searchText
             .combineLatest(coinDataService.$allCoins) //добавляет еще одного паблюшера
         //задержка для того чтобы при вводе символов с клавиатуры - каждый раз не срабатывала функция фильтрации а только после паузы после 0.5 секунд
@@ -63,6 +66,7 @@ class HomeViewModel: ObservableObject {
             }
             .store(in: &cancellable)
         
+        //update marketData
         
         marketDataService.$marketData
         /*
@@ -93,6 +97,31 @@ class HomeViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellable)
+        
+        //updates portfolioCoins
+        //РАЗОБРАТЬ!!!
+        $allCoins
+            .combineLatest(portfolioDataService.$savedEntities)
+            .map{(coinModels, portfolioEntitys) -> [CoinModel] in
+                coinModels
+                    .compactMap { (coin) -> CoinModel? in
+                        guard let entity = portfolioEntitys.first(where: {$0.coinID == coin.id}) else {
+                            return nil
+                        }
+                        return coin.updateHoldings(amount: entity.amount)
+                    }
+            }
+            .sink { [weak self] (returnedCoins) in
+                if let self = self {
+                    self.portfolioCoins = returnedCoins
+                }
+            }
+            .store(in: &cancellable)
+        
+    }
+    
+    func updatePortfolio(coin: CoinModel, amount: Double) {
+        portfolioDataService.updatePortfolio(coin: coin, amount: amount)
     }
     
     private func filterCoins(text: String, coins: [CoinModel]) -> [CoinModel] {
@@ -115,6 +144,7 @@ class HomeViewModel: ObservableObject {
         let marketCap = StatisticModel(title: "Market Cap", value: data.marketCap, percentageChange: data.marketCapChangePercentage24HUsd)
         let volume = StatisticModel(title: "24h Volume", value: data.volume)
         let btcDominance = StatisticModel(title: "Btc Dominance", value: data.btcDominance)
+        print("\(data.btcDominance) - Bitcion")
         let portfolio = StatisticModel(title: "Portfolio Value", value: "$0.00", percentageChange: 0)
         stats.append(contentsOf:
                         [ marketCap,

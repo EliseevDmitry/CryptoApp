@@ -14,7 +14,7 @@ struct StatisticView: View {
             Text(stat.title)
                 .font(.caption)
                 .foregroundStyle(Color.theme.secondaryText)
-            Text(Double(stat.value)?.formattedWithAbbreviations() ?? "0.0")
+            Text(Double(stat.value)?.formattedWithAbbreviations() ?? "\(stat.value)")
                 .font(.headline)
                 .foregroundStyle(Color.theme.accent)
             HStack(spacing: 4){
