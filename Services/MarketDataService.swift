@@ -17,8 +17,8 @@ final class MarketDataService {
         getCoins()
     }
     
-    
-    private func getCoins(){
+    //убираем закрытость "private" - функции для реализации в HomeViewModel - функции перезагрузки (обновления) данных
+    func getCoins(){
         guard let url = URL(string: "https://api.coingecko.com/api/v3/global") else
         { return }
         marketDataSubscription = NetworkingManager.download(url: url) //Оптимизация кода
