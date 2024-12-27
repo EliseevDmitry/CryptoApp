@@ -24,7 +24,7 @@ struct CryptoAppApp: App {
         WindowGroup {
             //сразу для приложения определяем "NavigationView"
             GeometryReader { geometry in
-                NavigationView {
+                NavigationStack {
                     HomeView()
                         .toolbar(.hidden) //скрываем панель toolBar
                     

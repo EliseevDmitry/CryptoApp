@@ -12,6 +12,11 @@ struct HomeView: View {
     @Environment(\.mainWindowSize) var viewSize
     @State private var showPortfolio: Bool = false
     @State private var showPortfolioView: Bool = false
+    
+    //две переменные, которые будут реализовывать кастомную навигацию на DetailView
+    @State private var selectedCoin: CoinModel? = nil
+    @State private var showDetailView: Bool = false
+    
     var body: some View {
         ZStack{
             //background layer
@@ -20,9 +25,9 @@ struct HomeView: View {
             //добавляет новый лист к фону
                 .sheet(isPresented: $showPortfolioView, content: {
                     PortfolioView()
-                      //  .environmentObject(vm) //проверим нужно ли тут пробрасывать!?
+                    //  .environmentObject(vm) //проверим нужно ли тут пробрасывать!?
                 })
-
+            
             //content layer
             VStack{
                 homeHeader //очень хорошая практика - выносить в отдельные extension (блоки кода)
@@ -40,8 +45,18 @@ struct HomeView: View {
                 Spacer(minLength: 0)
             }
         }
+        //этот блок позволяет на новый экран через реализованную функцию func segue(coin: CoinModel) { } - обойти проблему инициализации DetailView() в списке List ()
+        .background()
+        .navigationDestination(isPresented: $showDetailView) {
+            //DetailView(coin: $selectedCoin) - заменяем на
+            DetailLoadingView(coin: $selectedCoin)
+        }
+        
+        
+       
     }
 }
+    
 
 //очень хорошая практика - выносить в отдельные extension (блоки кода)
 extension HomeView {
@@ -78,13 +93,31 @@ extension HomeView {
     private var allCoinsList: some View {
         List {
             ForEach(vm.allCoins){ item in
-                CoinRowView(showHoldingsColumn: false, coin: item)
-                //инициализация отступов в LIST!!!
-                    .listRowInsets(.init(top: 10, leading: 0, bottom: 0, trailing: 10))
+                //основная проблема использования NavigationLink - заключается в том, что данные станицы по этой ссылке загружаются в память еще до перехода на страницу, при чем для всех активных в рамках видимости items на экране. При скролинге - загрузка данных продолжается!!! Использование - данного формата в проектах недопустимо!
+                //                NavigationLink {
+                //                    DetailView()
+                //                } label: {
+                //                    CoinRowView(showHoldingsColumn: false, coin: item)
+                //                    //инициализация отступов в LIST!!!
+                //                        .listRowInsets(.init(top: 10, leading: 0, bottom: 0, trailing: 10))
+                //                
+                //                }
+             
+                    CoinRowView(showHoldingsColumn: false, coin: item)
+                    //инициализация отступов в LIST!!!
+                        .listRowInsets(.init(top: 10, leading: 0, bottom: 0, trailing: 10))
+                    .onTapGesture {
+                        segue(coin: item)
+                    }
             }
             
         }
         .listStyle(PlainListStyle())
+    }
+    
+    private func segue(coin: CoinModel) {
+        selectedCoin = coin
+        showDetailView.toggle()
     }
     
     private var portfolioCoinsList: some View {
@@ -107,11 +140,11 @@ extension HomeView {
                     .opacity((vm.sortoptions == .rank || vm.sortoptions == .rankReversed) ? 1.0 : 0.0)
                     .rotationEffect(Angle(degrees: vm.sortoptions == .rank ? 0 : 180))
             }
-                .onTapGesture {
-                    withAnimation(.default) {
-                        vm.sortoptions = vm.sortoptions == .rank ? .rankReversed : .rank //инверсия значений (КРУТО!)
-                    }
+            .onTapGesture {
+                withAnimation(.default) {
+                    vm.sortoptions = vm.sortoptions == .rank ? .rankReversed : .rank //инверсия значений (КРУТО!)
                 }
+            }
             Spacer()
             if showPortfolio {
                 HStack (spacing: 4){
@@ -120,11 +153,11 @@ extension HomeView {
                         .opacity((vm.sortoptions == .holdings || vm.sortoptions == .holdingsReversed) ? 1.0 : 0.0)
                         .rotationEffect(Angle(degrees: vm.sortoptions == .holdings ? 0 : 180))
                 }
-                    .onTapGesture {
-                        withAnimation(.default) {
-                            vm.sortoptions = vm.sortoptions == .holdings ? .holdingsReversed : .holdings
-                        }
+                .onTapGesture {
+                    withAnimation(.default) {
+                        vm.sortoptions = vm.sortoptions == .holdings ? .holdingsReversed : .holdings
                     }
+                }
             }
             HStack (spacing: 4){
                 Text("Price")
@@ -133,11 +166,11 @@ extension HomeView {
                     .opacity((vm.sortoptions == .price || vm.sortoptions == .priceReversed) ? 1.0 : 0.0)
                     .rotationEffect(Angle(degrees: vm.sortoptions == .price ? 0 : 180))
             }
-                .onTapGesture {
-                    withAnimation(.default) {
-                        vm.sortoptions = vm.sortoptions == .price ? .priceReversed : .price
-                    }
+            .onTapGesture {
+                withAnimation(.default) {
+                    vm.sortoptions = vm.sortoptions == .price ? .priceReversed : .price
                 }
+            }
             Button {
                 withAnimation {
                     vm.reloadData()
@@ -146,7 +179,7 @@ extension HomeView {
                 Image(systemName: "goforward")
                     .rotationEffect(Angle(degrees: vm.isLoading ? 360 : 0))
             }
-
+            
         }
         .font(.caption)
         .foregroundStyle(Color.theme.secondaryText)
@@ -158,7 +191,7 @@ extension HomeView {
 //MARK: - PREVIEWS
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View{
-        NavigationView{
+        NavigationStack{
             HomeView()
                 .toolbar(.hidden)
         }

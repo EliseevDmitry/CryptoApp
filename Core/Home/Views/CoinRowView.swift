@@ -23,6 +23,10 @@ struct CoinRowView: View {
                     .frame(width: viewSize.width / 3.5, alignment: .trailing)
             }
             .font(.subheadline)
+        //эта история - как сделать кликабельной всю ячейку а не только активные элементы в виде (Text(), Image() ...)
+            .background(
+                Color.theme.background.opacity(0.001)
+            )
         }
 }
 
