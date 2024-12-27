@@ -27,7 +27,6 @@ struct CryptoAppApp: App {
                 NavigationStack {
                     HomeView()
                         .toolbar(.hidden) //скрываем панель toolBar
-                    
                 }
                 .environmentObject(vm)
                 .environment(\.mainWindowSize, geometry.size)

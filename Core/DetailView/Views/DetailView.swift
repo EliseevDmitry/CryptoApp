@@ -40,13 +40,16 @@ struct DetailView: View {
      print("NavigationLink - мы не перешли на экран но он уже создан!")
      }
      */
+    @StateObject var vm: DetailViewModel
     let coin: CoinModel
     init(coin: CoinModel) {
         self.coin = coin
+        self._vm = StateObject(wrappedValue: DetailViewModel(coin: coin))
         print("Initializing Detail View for \(coin.name)")
     }
     var body: some View {
         Text(coin.name)
+
     }
 }
 
