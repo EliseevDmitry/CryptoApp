@@ -101,13 +101,43 @@ extension HomeView {
     
     private var columnTitles: some View {
         HStack{
-            Text("Coin")
+            HStack (spacing: 4){
+                Text("Coin")
+                Image(systemName: "chevron.down")
+                    .opacity((vm.sortoptions == .rank || vm.sortoptions == .rankReversed) ? 1.0 : 0.0)
+                    .rotationEffect(Angle(degrees: vm.sortoptions == .rank ? 0 : 180))
+            }
+                .onTapGesture {
+                    withAnimation(.default) {
+                        vm.sortoptions = vm.sortoptions == .rank ? .rankReversed : .rank //инверсия значений (КРУТО!)
+                    }
+                }
             Spacer()
             if showPortfolio {
-                Text("Holdings")
+                HStack (spacing: 4){
+                    Text("Holdings")
+                    Image(systemName: "chevron.down")
+                        .opacity((vm.sortoptions == .holdings || vm.sortoptions == .holdingsReversed) ? 1.0 : 0.0)
+                        .rotationEffect(Angle(degrees: vm.sortoptions == .holdings ? 0 : 180))
+                }
+                    .onTapGesture {
+                        withAnimation(.default) {
+                            vm.sortoptions = vm.sortoptions == .holdings ? .holdingsReversed : .holdings
+                        }
+                    }
             }
-            Text("Price")
-                .frame(width: viewSize.width / 3.5, alignment: .trailing)
+            HStack (spacing: 4){
+                Text("Price")
+                    .frame(width: viewSize.width / 3.5, alignment: .trailing)
+                Image(systemName: "chevron.down")
+                    .opacity((vm.sortoptions == .price || vm.sortoptions == .priceReversed) ? 1.0 : 0.0)
+                    .rotationEffect(Angle(degrees: vm.sortoptions == .price ? 0 : 180))
+            }
+                .onTapGesture {
+                    withAnimation(.default) {
+                        vm.sortoptions = vm.sortoptions == .price ? .priceReversed : .price
+                    }
+                }
             Button {
                 withAnimation {
                     vm.reloadData()
