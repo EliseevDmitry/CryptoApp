@@ -14,10 +14,10 @@ import SwiftUI
 struct DetailLoadingView: View {
     @Binding var coin: CoinModel?
     //Инициализация @___ свойств wrappedValue
-//    init(coin: Binding<CoinModel?>) {
-//        self._coin = coin
-//        print("Initializing Detail View for \(coin.wrappedValue?.name)")
-//    }
+    //    init(coin: Binding<CoinModel?>) {
+    //        self._coin = coin
+    //        print("Initializing Detail View for \(coin.wrappedValue?.name)")
+    //    }
     init (coin: Binding<CoinModel?>){
         self._coin = coin
         print("инициализируется только при переходе")
@@ -47,9 +47,32 @@ struct DetailView: View {
         self._vm = StateObject(wrappedValue: DetailViewModel(coin: coin))
         print("Initializing Detail View for \(coin.name)")
     }
+    private let columns: [GridItem] = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
     var body: some View {
-        Text(coin.name)
-
+        ScrollView{
+            VStack(spacing: 20) {
+                ChartView(coin: coin)
+                    .padding(.vertical)
+                overviewTitle
+                Divider()
+                overviewGrid
+                additionalTitle
+                Divider()
+                additionalGrid
+            }
+            .padding()
+        }
+        .navigationTitle(vm.coin.name)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                navigationItemToolBar
+            }
+        }
+        
+       
     }
 }
 
@@ -57,5 +80,60 @@ struct DetailView: View {
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View{
         DetailLoadingView(coin: .constant(dev.coin))
+    }
+}
+
+
+extension DetailView {
+    
+    private var navigationItemToolBar: some View {
+        
+            HStack{
+                Text(vm.coin.symbol.uppercased())
+                    .font(.headline)
+                    .foregroundStyle(Color.theme.secondaryText)
+                CoinImageView(coin: vm.coin)
+                    .frame(width: 25, height: 25)
+        }
+    }
+    
+    private var overviewTitle: some View {
+        Text("Overview")
+            .font(.title)
+            .bold()
+            .foregroundStyle(Color.theme.accent)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var additionalTitle: some View {
+        Text("Additional Details")
+            .font(.title)
+            .bold()
+            .foregroundStyle(Color.theme.accent)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var overviewGrid: some View {
+        LazyVGrid(
+            columns: columns,
+            alignment: .leading,
+            spacing: nil,
+            pinnedViews: []) {
+                ForEach(vm.overviewStatistics) { stat in
+                    StatisticView(stat: stat)
+                }
+            }
+    }
+    
+    private var additionalGrid: some View {
+        LazyVGrid(
+            columns: columns,
+            alignment: .leading,
+            spacing: nil,
+            pinnedViews: []) {
+                ForEach(vm.additionalStatistics) { stat in
+                    StatisticView(stat: stat)
+                }
+            }
     }
 }

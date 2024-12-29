@@ -11,8 +11,8 @@ import Combine
 final class CoinDetailDataService {
     
     @Published var coinDetails: СoinDetailModel? = nil
-    var cancellables: AnyCancellable?
-    let coin: CoinModel // нужна для кастомизации запроса к API по id валюты
+    private var cancellables: AnyCancellable?
+    private let coin: CoinModel // нужна для кастомизации запроса к API по id валюты
     
     init(coin: CoinModel){
         self.coin = coin
