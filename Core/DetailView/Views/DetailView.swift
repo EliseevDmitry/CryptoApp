@@ -41,9 +41,10 @@ struct DetailView: View {
      }
      */
     @StateObject var vm: DetailViewModel
-    let coin: CoinModel
+    @State private var showFullDescription: Bool = false
+    // let coin: CoinModel
     init(coin: CoinModel) {
-        self.coin = coin
+        //self.coin = coin
         self._vm = StateObject(wrappedValue: DetailViewModel(coin: coin))
         print("Initializing Detail View for \(coin.name)")
     }
@@ -51,17 +52,22 @@ struct DetailView: View {
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
+    private let spacing: CGFloat = 30
+    
     var body: some View {
         ScrollView{
             VStack(spacing: 20) {
-                ChartView(coin: coin)
+                ChartView(coin: vm.coin)
                     .padding(.vertical)
                 overviewTitle
+                Divider()
+                descriptionSection //
                 Divider()
                 overviewGrid
                 additionalTitle
                 Divider()
                 additionalGrid
+                webSiteSection
             }
             .padding()
         }
@@ -72,7 +78,7 @@ struct DetailView: View {
             }
         }
         
-       
+        
     }
 }
 
@@ -88,12 +94,12 @@ extension DetailView {
     
     private var navigationItemToolBar: some View {
         
-            HStack{
-                Text(vm.coin.symbol.uppercased())
-                    .font(.headline)
-                    .foregroundStyle(Color.theme.secondaryText)
-                CoinImageView(coin: vm.coin)
-                    .frame(width: 25, height: 25)
+        HStack{
+            Text(vm.coin.symbol.uppercased())
+                .font(.headline)
+                .foregroundStyle(Color.theme.secondaryText)
+            CoinImageView(coin: vm.coin)
+                .frame(width: 25, height: 25)
         }
     }
     
@@ -135,5 +141,48 @@ extension DetailView {
                     StatisticView(stat: stat)
                 }
             }
+    }
+    
+    private var descriptionSection: some View {
+        ZStack{
+            if let coinDescription = vm.coinDescription,
+               !coinDescription.isEmpty {
+                VStack(alignment: .leading){
+                    Text(coinDescription)
+                        .lineLimit(showFullDescription ? nil : 3)
+                        .font(.callout)
+                        .foregroundStyle(Color.theme.secondaryText)
+                    Button {
+                        withAnimation(.easeInOut){
+                            showFullDescription.toggle()
+                        }
+                    } label: {
+                        Text(showFullDescription ? "Less" : "Read more ...")
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .padding(.vertical, 4)
+                    }
+                    .foregroundStyle(Color.blue)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+    
+    private var webSiteSection: some View {
+        VStack (alignment: .leading, spacing: 20) {
+            if let websiteString = vm.websiteURL,
+               let url = URL(string: websiteString) {
+                Link("Website", destination: url)
+            }
+            
+            if let redditString = vm.redditURL,
+               let url = URL(string: redditString) {
+                Link("Reddit", destination: url)
+            }
+        }
+        .foregroundStyle(Color.blue)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .font(.headline)
     }
 }

@@ -121,6 +121,10 @@ struct СoinDetailModel: Codable {
         case blockTimeInMinutes = "block_time_in_minutes"
         case hashingAlgorithm = "hashing_algorithm"
     }
+    
+    var redableDescription: String? {
+        return description?.en?.removingHTMLOccurances
+    }
 }
 
 struct Description: Codable {

@@ -12,7 +12,10 @@ final class DetailViewModel: ObservableObject {
    
     @Published var overviewStatistics: [StatisticModel] = []
     @Published var additionalStatistics: [StatisticModel] = []
-@Published var coin: CoinModel
+    @Published var coin: CoinModel
+    @Published var coinDescription: String? = nil
+    @Published var websiteURL: String? = nil
+    @Published var redditURL: String? = nil
     
     private let coinDetailService: CoinDetailDataService
     private var cancellables = Set<AnyCancellable>()
@@ -24,6 +27,7 @@ final class DetailViewModel: ObservableObject {
     }
     
     private func addSubscribers() {
+        
         coinDetailService.$coinDetails
             .combineLatest($coin)
             .map(mapOverviewAndAdditionalArrays) //порядок параметров в этой функции имеет значение!!!
@@ -32,6 +36,14 @@ final class DetailViewModel: ObservableObject {
                     self.overviewStatistics = returnedArrays.overview
                     self.additionalStatistics = returnedArrays.additional
                 }
+            }
+            .store(in: &cancellables)
+        
+        coinDetailService.$coinDetails
+            .sink { [weak self] (returnedCoindetails) in
+                self?.coinDescription = returnedCoindetails?.description?.en
+                self?.websiteURL = returnedCoindetails?.links?.homepage?.first
+                self?.redditURL = returnedCoindetails?.links?.subredditURL
             }
             .store(in: &cancellables)
     }
