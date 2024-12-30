@@ -162,7 +162,7 @@ extension DetailView {
                             .fontWeight(.bold)
                             .padding(.vertical, 4)
                     }
-                    .foregroundStyle(Color.blue)
+                    .tint(.blue)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -181,7 +181,7 @@ extension DetailView {
                 Link("Reddit", destination: url)
             }
         }
-        .foregroundStyle(Color.blue)
+        .tint(.blue)
         .frame(maxWidth: .infinity, alignment: .leading)
         .font(.headline)
     }
