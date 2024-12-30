@@ -16,6 +16,7 @@ struct HomeView: View {
     //две переменные, которые будут реализовывать кастомную навигацию на DetailView
     @State private var selectedCoin: CoinModel? = nil
     @State private var showDetailView: Bool = false
+    @State private var showSettingsView: Bool = false
     
     var body: some View {
         ZStack{
@@ -44,6 +45,9 @@ struct HomeView: View {
                 }
                 Spacer(minLength: 0)
             }
+            .sheet(isPresented: $showSettingsView) {
+                SettingsView()
+            }
         }
         //этот блок позволяет на новый экран через реализованную функцию func segue(coin: CoinModel) { } - обойти проблему инициализации DetailView() в списке List ()
         .background()
@@ -70,6 +74,8 @@ extension HomeView {
                 .onTapGesture {
                     if showPortfolio {
                         showPortfolioView.toggle()
+                    } else {
+                        showSettingsView.toggle()
                     }
                 }
             Spacer()
