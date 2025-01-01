@@ -34,9 +34,18 @@ final class NetworkingManager {
          */
         
          URLSession.shared.dataTaskPublisher(for: url)
-            .subscribe(on: DispatchQueue.global(qos: .background))
+        //.subscribe(on: DispatchQueue.global(qos: .background))
+        /*
+         .subscribe(on: DispatchQueue.global(qos: .background))
+         не требуется переводить в background - потому что сама URLSession по умолчанию выполняется в background потоке
+         */
             .tryMap({ try handleURLResponse(output: $0, url: url) }) //непонятно как это создавать
-            .receive(on: DispatchQueue.main)
+            //.receive(on: DispatchQueue.main)
+        /*
+         плохая практика переводить в основной поток тут - .receive(on: DispatchQueue.main),
+         в силу того что далее декодирование данных будет происходить в DispatchQueue.main!!!
+         */
+            .retry(3) //количество попыток сетевого запроса к серверу - потом проброс ошибки
             .eraseToAnyPublisher()
     }
     

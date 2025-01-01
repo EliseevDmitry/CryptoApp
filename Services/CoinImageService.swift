@@ -41,6 +41,7 @@ final class CoinImageService {
             .tryMap({ (data)  -> UIImage? in
                 UIImage(data: data)
             })
+            .receive(on: DispatchQueue.main) //переходим в main поток тут, (refactor NetworkingManager)
             .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] (returnedImage) in
                 guard
                     let self = self,

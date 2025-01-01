@@ -29,6 +29,11 @@ struct CryptoAppApp: App {
                         HomeView()
                             .toolbar(.hidden) //скрываем панель toolBar
                     }
+                    
+                    /*
+                     //.navigationViewStyle(StackNavigationViewStyle())
+                     этот модификатор добавляется для корректного отображения на Ipad - при использовании NavigationView, однако при использовании NavigationStack - отображается все и так корректно!
+                     */
                     .environmentObject(vm)
                     .environment(\.mainWindowSize, geometry.size)
                     /*
@@ -44,7 +49,7 @@ struct CryptoAppApp: App {
                     /*
                      .zIndex() используется для управления порядком наложения (слоёв) в представлениях, когда они находятся на одном уровне в интерфейсе. Чем выше значение zIndex, тем выше будет расположено представление по отношению к другим.
                      гарантировано размещаем ZStack{ } - сверху другого представления!!!
-                     */  
+                     */
                 }
             }
         }

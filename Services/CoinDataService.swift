@@ -58,6 +58,7 @@ final class CoinDataService {
                 self.cancellables?.cancel() //завершаем паблешера по завершению получения данных
             }
          */
+            .receive(on: DispatchQueue.main) //переходим в main поток тут, (refactor NetworkingManager)
             .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] (returnedCoins) in
                 guard let self = self else { return }
                 self.allCoins = returnedCoins

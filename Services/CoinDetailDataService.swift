@@ -24,6 +24,7 @@ final class CoinDetailDataService {
         { return }
         cancellables = NetworkingManager.download(url: url) //Оптимизация кода
             .decode(type: СoinDetailModel.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main) //переходим в main поток тут, (refactor NetworkingManager)
             .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] (returnedCoinDetais) in
                 guard let self = self else { return }
                 self.coinDetails = returnedCoinDetais
