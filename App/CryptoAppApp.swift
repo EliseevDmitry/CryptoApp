@@ -6,18 +6,24 @@
 //
 
 import SwiftUI
+
 /*
  В Targets -> Display Name -> Crypto Tracker (то как приложение будет называться на Iphone)
  */
 
 @main
+
 struct CryptoAppApp: App {
+    
     @StateObject private var vm = HomeViewModel()
     @State private var showLaunchView = true
+    
     //инициализация цвета заголовка для всего приложения UINavigationBar
     init(){
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor : UIColor(Color.theme.accent)]
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor : UIColor(Color.theme.accent)]
+        UITableView.appearance().backgroundColor = UIColor.clear
+        
     }
     
     var body: some Scene {
@@ -29,7 +35,6 @@ struct CryptoAppApp: App {
                         HomeView()
                             .toolbar(.hidden) //скрываем панель toolBar
                     }
-                    
                     /*
                      //.navigationViewStyle(StackNavigationViewStyle())
                      этот модификатор добавляется для корректного отображения на Ipad - при использовании NavigationView, однако при использовании NavigationStack - отображается все и так корректно!

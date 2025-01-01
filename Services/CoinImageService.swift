@@ -10,9 +10,9 @@ import SwiftUI
 import Combine
 
 final class CoinImageService {
+    
     @Published var image: UIImage? = nil
     private var cancellables: AnyCancellable?
-    
     private let coin: CoinModel
     private let fileManager = LocalFileManager.instance
     private let folderName = "coin_images"

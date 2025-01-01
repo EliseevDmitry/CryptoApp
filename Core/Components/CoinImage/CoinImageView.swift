@@ -10,10 +10,8 @@ import SwiftUI
 struct CoinImageView: View {
     @StateObject var vm: CoinImageViewModel
     init(coin: CoinModel){
-        
         _vm = StateObject(wrappedValue: CoinImageViewModel(coin: coin)) //инициализация @State обьекта через "_"
     }
-    
     var body: some View {
         ZStack{
             if let image = vm.image {

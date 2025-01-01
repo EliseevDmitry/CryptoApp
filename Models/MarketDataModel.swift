@@ -176,9 +176,7 @@ struct MarketDataModel: Codable {
     let totalMarketCap, totalVolume, marketCapPercentage: [String: Double]
     let marketCapChangePercentage24HUsd: Double
 
-
     enum CodingKeys: String, CodingKey {
-
         case totalMarketCap = "total_market_cap"
         case totalVolume = "total_volume"
         case marketCapPercentage = "market_cap_percentage"

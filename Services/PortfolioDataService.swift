@@ -9,10 +9,10 @@ import Foundation
 import CoreData
 
 final class PortfolioDataService {
+    
     private let container: NSPersistentContainer
     private let containerName: String = "PortfolioContainer"
     private let entityName: String = "PortfolioEntity"
-    
     @Published var savedEntities: [PortfolioEntity] = []
     
     init(){
@@ -43,9 +43,7 @@ final class PortfolioDataService {
         }
     }
     
-    
     //MARK: - PRIVATE
-    
     private func getPortfolio(){
         let request = NSFetchRequest<PortfolioEntity>(entityName: entityName)
         do{

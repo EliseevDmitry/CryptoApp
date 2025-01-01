@@ -12,12 +12,10 @@ struct HomeView: View {
     @Environment(\.mainWindowSize) var viewSize
     @State private var showPortfolio: Bool = false
     @State private var showPortfolioView: Bool = false
-    
     //две переменные, которые будут реализовывать кастомную навигацию на DetailView
     @State private var selectedCoin: CoinModel? = nil
     @State private var showDetailView: Bool = false
     @State private var showSettingsView: Bool = false
-    
     var body: some View {
         ZStack{
             //background layer
@@ -28,7 +26,6 @@ struct HomeView: View {
                     PortfolioView()
                     //  .environmentObject(vm) //проверим нужно ли тут пробрасывать!?
                 })
-            
             //content layer
             VStack{
                 homeHeader //очень хорошая практика - выносить в отдельные extension (блоки кода)
@@ -47,7 +44,7 @@ struct HomeView: View {
                             portfolioCoinsList
                         }
                     }
-                        .transition(.move(edge: .trailing))
+                    .transition(.move(edge: .trailing))
                 }
                 Spacer(minLength: 0)
             }
@@ -61,16 +58,12 @@ struct HomeView: View {
             //DetailView(coin: $selectedCoin) - заменяем на
             DetailLoadingView(coin: $selectedCoin)
         }
-        
-        
-       
     }
 }
-    
+
 
 //очень хорошая практика - выносить в отдельные extension (блоки кода)
 extension HomeView {
-    
     private var portfolioEmptyText: some View {
         Text("You haven't added any coins to your portfolio yet. Click the + button to get started!")
             .font(.callout)
@@ -124,15 +117,15 @@ extension HomeView {
                 //                        .listRowInsets(.init(top: 10, leading: 0, bottom: 0, trailing: 10))
                 //                
                 //                }
-             
-                    CoinRowView(showHoldingsColumn: false, coin: item)
-                    //инициализация отступов в LIST!!!
-                        .listRowInsets(.init(top: 10, leading: 0, bottom: 0, trailing: 10))
+                
+                CoinRowView(showHoldingsColumn: false, coin: item)
+                //инициализация отступов в LIST!!!
+                    .listRowInsets(.init(top: 10, leading: 0, bottom: 0, trailing: 10))
                     .onTapGesture {
                         segue(coin: item)
                     }
+                    .listRowBackground(Color.theme.background) //Refactor background color list
             }
-            
         }
         .listStyle(PlainListStyle())
     }
@@ -149,7 +142,7 @@ extension HomeView {
                 //инициализация отступов в LIST!!!
                     .listRowInsets(.init(top: 10, leading: 0, bottom: 0, trailing: 10))
             }
-            
+            .listRowBackground(Color.theme.background) //Refactor background color list
         }
         .listStyle(PlainListStyle())
     }

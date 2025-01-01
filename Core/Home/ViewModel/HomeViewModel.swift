@@ -19,18 +19,15 @@ class HomeViewModel: ObservableObject {
      ]
      */
     @Published var statistics: [StatisticModel] = []
-    
     @Published var allCoins: [CoinModel] = []
     @Published var portfolioCoins: [CoinModel] = []
     @Published var searchText: String = ""
     @Published var isLoading: Bool = false //для индикации перезагрузки данных func reloadData() { }
     @Published var sortoptions: SortOption = .holdings //переменная выбора варианта сортировки из enum SortOption
-    
     private let coinDataService = CoinDataService()
     private let marketDataService = MarketDataService()
     private let portfolioDataService = PortfolioDataService()
     private var cancellable = Set<AnyCancellable>()
-    
     //создаем enum для использования в выборе типа сортировки
     enum SortOption {
         case rank, rankReversed, holdings, holdingsReversed, price, priceReversed
@@ -60,7 +57,6 @@ class HomeViewModel: ObservableObject {
          */
         
         //update allCoins
-        
         $searchText
             .combineLatest(coinDataService.$allCoins, $sortoptions) //добавляет еще одного паблюшера
         //задержка для того чтобы при вводе символов с клавиатуры - каждый раз не срабатывала функция фильтрации а только после паузы после 0.5 секунд
@@ -73,9 +69,7 @@ class HomeViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellable)
-        
         //update marketData
-        
         marketDataService.$marketData
         /*
          оптимизируем код - вынесем логику в private func
@@ -107,7 +101,6 @@ class HomeViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellable)
-        
         //updates portfolioCoins
         //РАЗОБРАТЬ!!!
         $allCoins
@@ -132,13 +125,11 @@ class HomeViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellable)
-        
     }
     
     func updatePortfolio(coin: CoinModel, amount: Double) {
         portfolioDataService.updatePortfolio(coin: coin, amount: amount)
     }
-    
     
     func reloadData() {
         //для реализации данной функции пришлось сделать открытыми функции getCoins() в coinDataService и marketDataService
@@ -200,8 +191,6 @@ class HomeViewModel: ObservableObject {
         let marketCap = StatisticModel(title: "Market Cap", value: data.marketCap, percentageChange: data.marketCapChangePercentage24HUsd)
         let volume = StatisticModel(title: "24h Volume", value: data.volume)
         let btcDominance = StatisticModel(title: "Btc Dominance", value: data.btcDominance)
-        
-        
         let portfolioValue = portfolioCoins.map{$0.currentHoldingsValue}.reduce(0, +) //сумма всех активов в портфеле
         let previousValues =
         portfolioCoins
@@ -214,12 +203,7 @@ class HomeViewModel: ObservableObject {
             .reduce(0, +)
         
         let precentageChange = ((portfolioValue - previousValues) / previousValues) //рефакторинг убрали * 100
-        
-        
         let portfolio = StatisticModel(title: "Portfolio Value", value: portfolioValue.asCurrencyWith2Decimals(), percentageChange: precentageChange)
-        
-        
-        
         stats.append(contentsOf:
                         [ marketCap,
                           volume,

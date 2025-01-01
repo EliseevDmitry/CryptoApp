@@ -14,15 +14,13 @@ extension PreviewProvider {
     }
 }
 
-
 final class DeveloperProvider {
-    static let instance = DeveloperProvider()
+    
+    static let instance = DeveloperProvider() //Singletone
     private init(){ }
     
     let homeVM = HomeViewModel()
-    
     let windowSize = CGSize(width: 393, height: 759) // чтение размера экрана iphone16
-    
     let coin = CoinModel(
         id: "bitcoin",
         symbol: "btc",
@@ -53,11 +51,9 @@ final class DeveloperProvider {
         priceChangePercentage24HInCurrency: -4.298996003078433,
         currentHoldings: 1
     )
-    
     let stat: [StatisticModel] = [
         StatisticModel(title: "Title", value: "Value", percentageChange: 1),
         StatisticModel(title: "Title", value: "Value"),
         StatisticModel(title: "Title", value: "Value", percentageChange: -7)
     ]
-    
 }

@@ -32,7 +32,6 @@ struct SearchBarView: View {
                         }
                     , alignment: .trailing
                 )
-            
         }
         .font(.headline)
         .padding()
@@ -60,7 +59,6 @@ struct SearchBarView_Previews: PreviewProvider {
             SearchBarView(searchText: .constant(""))
                 .previewLayout(.sizeThatFits)
                 .preferredColorScheme(.dark)
-            
         }
     }
 }

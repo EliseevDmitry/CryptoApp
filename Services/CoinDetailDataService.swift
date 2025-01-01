@@ -32,4 +32,5 @@ final class CoinDetailDataService {
                 self.cancellables?.cancel()
             })
     }
+    
 }

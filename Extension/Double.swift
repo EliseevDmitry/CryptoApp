@@ -8,19 +8,16 @@
 import Foundation
 
 extension Double {
-    
     /*
      Формат создания короткой справки по созданной функции при нажатии на функцию "Option + ?"
-     
      ///Convert a Double into a Currency with 2-6 decimal places
      ///```
      ///Convert 1234,56 to $1,234.56
      ///Convert 12.3456 to $12,3456
      ///Convert 0.123456 to $0.123456
      ///```
-     
      */
- 
+    
     ///Convert a Double into a Currency with 2 decimal places
     ///```
     ///Convert 1234,56 to $1,234.56
@@ -30,13 +27,11 @@ extension Double {
         let formatter = NumberFormatter()
         formatter.usesGroupingSeparator = true //разделяет число на группы цифр 1000000 -> 1,000,000 (для улучшения визуальной составляющей восприятия информации)
         formatter.numberStyle = .currency //будет установлен знак валюты в зависимости от региона
-       
         //Блок кода что бы в текущей локации не отображались RUB
         formatter.locale = .current
         formatter.currencyCode = "usd"
         formatter.currencySymbol = "$"
         //Блок кода что бы в текущей локации не отображались RUB
-        
         formatter.minimumFractionDigits = 2 //min количество знаков после запятой
         formatter.maximumFractionDigits = 2 //max количество знаков после запятой
         return formatter
@@ -62,13 +57,11 @@ extension Double {
         let formatter = NumberFormatter()
         formatter.usesGroupingSeparator = true //разделяет число на группы цифр 1000000 -> 1,000,000 (для улучшения визуальной составляющей восприятия информации)
         formatter.numberStyle = .currency //будет установлен знак валюты в зависимости от региона
-       
         //Блок кода что бы в текущей локации не отображались RUB
         formatter.locale = .current
         formatter.currencyCode = "usd"
         formatter.currencySymbol = "$"
         //Блок кода что бы в текущей локации не отображались RUB
-        
         formatter.minimumFractionDigits = 2 //min количество знаков после запятой
         formatter.maximumFractionDigits = 6 //max количество знаков после запятой
         return formatter
@@ -112,7 +105,6 @@ extension Double {
     func formattedWithAbbreviations() -> String {
         let num = abs(Double(self))
         let sign = (self < 0) ? "-" : ""
-
         switch num {
         case 1_000_000_000_000...:
             let formatted = num / 1_000_000_000_000
@@ -132,7 +124,6 @@ extension Double {
             return "\(sign)\(stringFormatted)K"
         case 0...:
             return self.asNumberString()
-
         default:
             return "\(sign)\(self)"
         }

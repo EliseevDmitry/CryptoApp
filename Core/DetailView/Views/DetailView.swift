@@ -31,8 +31,6 @@ struct DetailLoadingView: View {
     }
 }
 
-
-
 struct DetailView: View {
     /*
      пробовали работу NavigationLink со списком и скроллингом
@@ -53,7 +51,6 @@ struct DetailView: View {
         GridItem(.flexible())
     ]
     private let spacing: CGFloat = 30
-    
     var body: some View {
         ScrollView{
             VStack(spacing: 20) {
@@ -71,14 +68,17 @@ struct DetailView: View {
             }
             .padding()
         }
+        //Color refactoring
+        .background(
+            Color.theme.background
+                .ignoresSafeArea()
+        )
         .navigationTitle(vm.coin.name)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 navigationItemToolBar
             }
         }
-        
-        
     }
 }
 
@@ -89,11 +89,8 @@ struct DetailView_Previews: PreviewProvider {
     }
 }
 
-
 extension DetailView {
-    
     private var navigationItemToolBar: some View {
-        
         HStack{
             Text(vm.coin.symbol.uppercased())
                 .font(.headline)
@@ -174,8 +171,7 @@ extension DetailView {
             if let websiteString = vm.websiteURL,
                let url = URL(string: websiteString) {
                 Link("Website", destination: url)
-            }
-            
+            }   
             if let redditString = vm.redditURL,
                let url = URL(string: redditString) {
                 Link("Reddit", destination: url)

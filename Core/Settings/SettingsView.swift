@@ -17,18 +17,25 @@ struct SettingsView: View {
         NavigationStack{
             List {
                 swiftfulThinkingSection
+                    .listRowBackground(Color.theme.background.opacity(0.5))
                 coinGekoSection
+                    .listRowBackground(Color.theme.background.opacity(0.5))
                 developerSection
+                    .listRowBackground(Color.theme.background.opacity(0.5))
                 applicationSection
+                    .listRowBackground(Color.theme.background.opacity(0.5))
             }
+            //Закрашиваем фон List!!!
+            .scrollContentBackground(.hidden)
+            .background(Color.theme.background)
             .font(.headline)
             .tint(.blue)
             .listStyle(GroupedListStyle())
-            //.navigationTitle("Settings")
+            .navigationTitle("Settings")
             .toolbar {
-                ToolbarItem(placement: .topBarLeading, content: {
+                ToolbarItem(placement: .topBarLeading) {
                     XMarkButton()
-                })
+                }
             }
         }
     }
@@ -39,7 +46,6 @@ struct SettingsView: View {
 }
 
 extension SettingsView {
-    
     private var swiftfulThinkingSection: some View {
         //у секции как у UITableView - есть header и footer
         Section(header: Text("Swiftful Thinking")) {
@@ -60,7 +66,7 @@ extension SettingsView {
     }
     
     private var coinGekoSection: some View {
-         Section(header: Text("CoinGecko")) {
+        Section(header: Text("CoinGecko")) {
             VStack(alignment: .leading) {
                 Image("coingecko")
                     .resizable()
@@ -72,12 +78,12 @@ extension SettingsView {
                     .foregroundStyle(Color.theme.accent)
             }
             .padding()
-             Link("Visit CoinGecko", destination: coingeckoURL)
+            Link("Visit CoinGecko", destination: coingeckoURL)
         }
     }
     
     private var developerSection: some View {
-         Section(header: Text("Developer")) {
+        Section(header: Text("Developer")) {
             VStack(alignment: .leading) {
                 Image("logo")
                     .resizable()
@@ -89,10 +95,9 @@ extension SettingsView {
                     .foregroundStyle(Color.theme.accent)
             }
             .padding()
-             Link("Visit Website", destination: personalURL)
+            Link("Visit Website", destination: personalURL)
         }
     }
-    
     
     private var applicationSection: some View {
         Section(header: Text("Application")) {

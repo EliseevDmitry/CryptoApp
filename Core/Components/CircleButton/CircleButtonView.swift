@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct CircleButtonView: View {
-    
     let iconName: String
     var body: some View {
         Image(systemName: iconName)

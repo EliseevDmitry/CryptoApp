@@ -10,6 +10,7 @@ import SwiftUI
 
 //для урощения работы с Haptic эффектами создаем отдельный менеджер
 final class HapticManager {
+    
     static private var generator = UINotificationFeedbackGenerator()
     
     static func notification(type: UINotificationFeedbackGenerator.FeedbackType){

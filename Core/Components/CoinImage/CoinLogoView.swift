@@ -25,7 +25,6 @@ struct CoinLogoView: View {
                 .minimumScaleFactor(0.5)
                 .multilineTextAlignment(.center)
         }
-        
     }
 }
 

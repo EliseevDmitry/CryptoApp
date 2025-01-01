@@ -13,21 +13,21 @@ struct CoinRowView: View {
     @State var showHoldingsColumn: Bool = true
     let coin: CoinModel
     var body: some View {
-            HStack(spacing: 0) {
-                leftColumn
-                Spacer()
-                if showHoldingsColumn {
-                    centerColumn
-                }
-                rightColumn
-                    .frame(width: viewSize.width / 3.5, alignment: .trailing)
+        HStack(spacing: 0) {
+            leftColumn
+            Spacer()
+            if showHoldingsColumn {
+                centerColumn
             }
-            .font(.subheadline)
-        //эта история - как сделать кликабельной всю ячейку а не только активные элементы в виде (Text(), Image() ...)
-            .background(
-                Color.theme.background.opacity(0.001)
-            )
+            rightColumn
+                .frame(width: viewSize.width / 3.5, alignment: .trailing)
         }
+        .font(.subheadline)
+        //эта история - как сделать кликабельной всю ячейку а не только активные элементы в виде (Text(), Image() ...)
+        .background(
+            Color.theme.background.opacity(0.001)
+        )
+    }
 }
 
 //MARK: - EXTENSION

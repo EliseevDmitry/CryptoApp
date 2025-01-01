@@ -24,7 +24,6 @@ struct ColorTheme {
  Вся фишка этой конструкции - можно копировать структуру ColorTheme - и создать очень быстро альтернативную тему для приложения заменим цвета
  */
 
-
 struct LaunhTheme {
     let accent = Color("LaunchAccentColor")
     let background = Color("LaunchBackgroundColor")

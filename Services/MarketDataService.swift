@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 final class MarketDataService {
-  
+    
     @Published var marketData: MarketDataModel? = nil
     var marketDataSubscription: AnyCancellable?
     
@@ -28,6 +28,7 @@ final class MarketDataService {
                 guard let self = self else { return }
                 self.marketData = returnedGlobalData.data
                 self.marketDataSubscription?.cancel()
-            }) 
+            })
     }
+    
 }

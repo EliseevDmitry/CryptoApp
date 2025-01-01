@@ -16,6 +16,7 @@ final class NetworkingManager {
         var errorDescription: String?{
             switch self {
             case .badURLResponse(url: let url):
+                //Хорошая практика - эмодзи - в консоле сразу видны проблемы
                 return "[🔥] Bad response for URL: \(url)" //control + command + space - токрывает смайлики
             case .unknown:
                 return "[⚠️] Unknown error occured"
@@ -24,7 +25,6 @@ final class NetworkingManager {
     }
     
     static func download(url: URL) -> AnyPublisher<Data, Error> {
-        
         /*
          изначально если мы захотим вернуть значение этой функции, то ее тип будет:
          Publishers.ReceiveOn<Publishers.TryMap<Publishers.SubscribeOn<URLSession.DataTaskPublisher, DispatchQueue>, Data>, DispatchQueue>
@@ -33,14 +33,14 @@ final class NetworkingManager {
          .eraseToAnyPublisher() -> тогда тип возвращаемого значения будет -> AnyPublisher<Data, Error>
          */
         
-         URLSession.shared.dataTaskPublisher(for: url)
+        URLSession.shared.dataTaskPublisher(for: url)
         //.subscribe(on: DispatchQueue.global(qos: .background))
         /*
          .subscribe(on: DispatchQueue.global(qos: .background))
          не требуется переводить в background - потому что сама URLSession по умолчанию выполняется в background потоке
          */
             .tryMap({ try handleURLResponse(output: $0, url: url) }) //непонятно как это создавать
-            //.receive(on: DispatchQueue.main)
+        //.receive(on: DispatchQueue.main)
         /*
          плохая практика переводить в основной поток тут - .receive(on: DispatchQueue.main),
          в силу того что далее декодирование данных будет происходить в DispatchQueue.main!!!
@@ -52,7 +52,7 @@ final class NetworkingManager {
     static func handleURLResponse(output: URLSession.DataTaskPublisher.Output, url: URL) throws -> Data {
         guard let response = output.response as? HTTPURLResponse,
               response.statusCode >= 200 && response.statusCode < 300
-        //else {throw URLError(.badServerResponse) } //можно заменить после создания enum
+                //else {throw URLError(.badServerResponse) } //можно заменить после создания enum
         else { throw NetworkingError.badURLResponse(url: url) }
         return output.data
     }

@@ -19,13 +19,17 @@ struct PortfolioView: View {
             ScrollView{
                 VStack(alignment: .leading, spacing: 0) {
                     SearchBarView(searchText: $vm.searchText)
-                      
+                    
                     coinLogoList
                     if selectedCoin != nil {
                         portfolioInputSection
                     }
                 }
             }
+            .background(
+                Color.theme.background //Refactor background color
+                    .ignoresSafeArea()
+            )
             .navigationTitle("Edit Portfolio")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -124,16 +128,13 @@ extension PortfolioView {
         else { return }
         //save to portfolio
         vm.updatePortfolio(coin: coin, amount: amount)
-        
         //show checkmark
         withAnimation(.easeIn) {
             showCheckmark = true
             removeSelectedCoin()
         }
-        
         //hide keyboard
         UIApplication.shared.endEditing()
-        
         //hide checkmark
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
             withAnimation(.easeOut) {
